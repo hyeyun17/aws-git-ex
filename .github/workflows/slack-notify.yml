@@ -17,9 +17,9 @@ jobs:
           response=$(curl -s -o /dev/null -w "%{http_code}" https://acc.hongik.ac.kr)
           echo "response=$response" >> $GITHUB_ENV
           if [ "$response" -eq 200 ]; then
-            echo "✅ 서버 응답 정상"
+            echo "서버 응답 정상"
           else
-            echo "❌ 서버 응답 오류 (status: $response)"
+            echo "서버 응답 오류 (status: $response)"
             exit 1
           fi
 
