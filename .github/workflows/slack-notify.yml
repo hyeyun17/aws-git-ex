@@ -1,36 +1,22 @@
 name: Slack Notification
-
+ 
 on:
-  workflow_dispatch:         # 수동 실행 가능
-  pull_request:              # PR 발생 시 실행
-    branches: [ "main", "develop" ]   
-
+  workflow_dispatch:
+  pull_request:
+    branches: [ "master", "develop" ]
+ 
 jobs:
-  healthcheck:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. 서버 상태 확인
-      - name: Check server status
-        id: health
-        run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://acc.hongik.ac.kr)
-          echo "response=$response" >> $GITHUB_ENV
-          if [ "$response" -eq 200 ]; then
-            echo "서버 응답 정상"
-          else
-            echo "서버 응답 오류 (status: $response)"
-            exit 1
-          fi
-
-      # 2. Slack 알림 전송 (8398a7/action-slack 사용)
-      - name: action-slack
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          author_name: www-be
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-          if_mention: failure,cancelled
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook }}
-        if: always()
+    - name: action-slack
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        author_name: www-be
+        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+        if_mention: failure,cancelled
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook }} # required
+      if: always() # Pick up events even if the job fails or is canceled.
+ 
