@@ -1,4 +1,4 @@
-name: Slack Notification & Server Health Check
+name: Slack Notification
 
 on:
   workflow_dispatch:         # 수동 실행 가능
